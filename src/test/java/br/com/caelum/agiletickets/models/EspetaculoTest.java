@@ -155,6 +155,7 @@ public class EspetaculoTest {
 		
 		List<Sessao> sessoes = show.criaSessoes(diaInicio, diaFim, hora, Periodicidade.SEMANAL);
 		
+		//
 		Assert.assertEquals(2, sessoes.size());
 			Assert.assertEquals(show, sessoes.get(0).getEspetaculo());
 			Assert.assertEquals(diaInicio.toDateTime(hora), sessoes.get(0).getInicio());
