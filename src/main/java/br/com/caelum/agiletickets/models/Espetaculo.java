@@ -2,6 +2,7 @@ package br.com.caelum.agiletickets.models;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -13,8 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+import org.joda.time.Weeks;
 
 @Entity
 public class Espetaculo {
@@ -98,7 +101,44 @@ public class Espetaculo {
      */
 	public List<Sessao> criaSessoes(LocalDate inicio, LocalDate fim, LocalTime horario, Periodicidade periodicidade) {
 		// ALUNO: Não apague esse metodo. Esse sim será usado no futuro! ;)
-		return null;
+		List<Sessao> sessoes = new ArrayList<Sessao>();
+		int dias = Days.daysBetween(inicio, fim).getDays();
+		int semanas = Weeks.weeksBetween(inicio, fim).getWeeks();
+		
+		if(inicio.isAfter(fim)){
+			return sessoes;
+		}
+		
+		if ((periodicidade == Periodicidade.DIARIA) && (inicio.equals(fim))) {
+			Sessao sessao = new Sessao();
+			sessao.setEspetaculo(this);
+			sessao.setInicio(inicio.toDateTime(horario));
+			sessoes.add(sessao);
+			
+		}else if((periodicidade == Periodicidade.DIARIA) && (!inicio.equals(fim))){
+			
+			for (int i = 0; i <= dias; i++) {
+				Sessao sessao = new Sessao();
+				sessao.setEspetaculo(this);
+				sessao.setInicio(inicio.plusDays(i).toDateTime(horario));
+				sessoes.add(sessao);
+			}
+		}else if((periodicidade == Periodicidade.SEMANAL) && (inicio.equals(fim))){
+			Sessao sessao = new Sessao();
+			sessao.setEspetaculo(this);
+			sessao.setInicio(inicio.toDateTime(horario));
+			sessoes.add(sessao);
+		}else if((periodicidade == Periodicidade.SEMANAL) && (!inicio.equals(fim))){
+			
+			for (int i = 0; i <= semanas; i++) {
+				Sessao sessao = new Sessao();
+				sessao.setEspetaculo(this);
+				sessao.setInicio(inicio.plusWeeks(i).toDateTime(horario));
+				sessoes.add(sessao);
+			}
+		}
+		
+		return sessoes;
 	}
 	
 	public boolean Vagas(int qtd, int min)
